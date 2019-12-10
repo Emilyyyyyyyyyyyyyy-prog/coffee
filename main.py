@@ -1,19 +1,23 @@
 import sqlite3
 from PyQt5 import uic
+import os
 from PyQt5.QtCore import Qt
 import sys
 from PyQt5.QtWidgets import QWidget, QApplication, QTableWidgetItem, QInputDialog
+from main_ui import Ui_Form
+from addEditCoffeeForm import Ui_Form1
 
 
-class AddCoffee(QWidget):
-    def __init__(self):
-        super().__init__()
+class AddCoffee(QWidget, Ui_Form1):
+    def __init__(self, parent=None):
+        super(AddCoffee, self).__init__(parent)
         self.id = 0
-        uic.loadUi('addEditCoffeeForm.ui', self)
+        self.setupUi(self)
         self.pushButton3.clicked.connect(self.insert)
 
     def insert(self):
-        con = sqlite3.connect("coffee.sqlite")
+        path = os.pardir + '/data/coffee.sqlite'
+        con = sqlite3.connect(path)
         cur = con.cursor()
         if not self.id:
             data = (self.lineEdit.text(), self.lineEdit_2.text(), self.lineEdit_3.text(),
@@ -38,7 +42,8 @@ class AddCoffee(QWidget):
         main_window.table()
 
     def open(self, id):
-        con = sqlite3.connect("coffee.sqlite")
+        path = os.pardir + '/data/coffee.sqlite'
+        con = sqlite3.connect(path)
         cur = con.cursor()
         cofs = cur.execute("SELECT * from coffee WHERE id = ?", (id,)).fetchall()[0]
         self.lineEdit.setText(str(cofs[1]))
@@ -50,10 +55,10 @@ class AddCoffee(QWidget):
         self.id = id
 
 
-class Coffee(QWidget):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('main.ui', self)
+class Coffee(QWidget, Ui_Form):
+    def __init__(self, parent=None):
+        super(Coffee, self).__init__(parent)
+        self.setupUi(self)
         self.coffee = self
 
         self.setGeometry(300, 300, 460, 380)
@@ -69,7 +74,8 @@ class Coffee(QWidget):
         self.new_coffee.show()
 
     def edit_coffee(self):
-        con = sqlite3.connect("coffee.sqlite")
+        path = os.pardir + '/data/coffee.sqlite'
+        con = sqlite3.connect(path)
         cur = con.cursor()
         cofs = cur.execute("""SELECT * from coffee""").fetchall()
         cof_id = map(str, [i[0] for i in cofs])
@@ -82,7 +88,8 @@ class Coffee(QWidget):
             self.new_coffee.show()
 
     def table(self):
-        con = sqlite3.connect("coffee.sqlite")
+        path = os.pardir + '/data/coffee.sqlite'
+        con = sqlite3.connect(path)
         cur = con.cursor()
         cur.execute("select * from coffee")
         rows = cur.fetchall()
