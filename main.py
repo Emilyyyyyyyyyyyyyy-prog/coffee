@@ -35,7 +35,7 @@ class AddCoffee(QWidget):
         con.close()
         self.id = 0
         self.close()
-        ex.table()
+        main_window.table()
 
     def open(self, id):
         con = sqlite3.connect("coffee.sqlite")
@@ -103,6 +103,6 @@ class Coffee(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Coffee()
-    ex.show()
+    main_window = Coffee()
+    main_window.show()
     sys.exit(app.exec_())
